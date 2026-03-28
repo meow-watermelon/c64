@@ -87,7 +87,7 @@ int main() {
                 end = clock();
 
                 /* write to the standard output */
-                printf("first: %lu post: %lu found: %lu time: %lu\n", first, post, init_num, (end - start) / CLOCKS_PER_SEC);
+                printf("first: %lu post: %lu found: %lu time: %lu\n", first, post, init_num, (unsigned long int)(end - start) / CLOCKS_PER_SEC);
             }
         }
 
