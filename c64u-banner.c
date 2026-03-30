@@ -52,8 +52,7 @@ int main() {
     /* get original text color */
     unsigned char origin_text_color = textcolor(COLOR_WHITE);
 
-    unsigned char banner_length;
-    banner_length = (unsigned char)strlen(C64U_BANNER);
+    unsigned banner_length = (unsigned char)strlen(C64U_BANNER);
 
     /* get screen size */
     screensize(&x, &y);
@@ -86,4 +85,3 @@ int main() {
 
     return 0;
 }
-
