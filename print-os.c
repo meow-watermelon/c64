@@ -7,7 +7,7 @@
 
 int main() {
     unsigned int os_type;
-    char *os_type_string;
+    unsigned char *os_type_string;
 
     os_type = get_ostype();
 
