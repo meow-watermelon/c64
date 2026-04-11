@@ -71,15 +71,34 @@ static void color_wash(unsigned int count) {
     VIC.addr = 0x17;
 }
 
+static void maze(unsigned int count) {
+    unsigned int i = 0;
+    VIC.addr = 0x14;
+
+    while  (count > 0) {
+        for (i = 0; i < 1000; ++i) {
+            SCREEN_BASE[i] = 77 + (rand() % 2);
+        }
+
+        --count;
+    }
+
+    VIC.addr = 0x17;
+}
+
 int main(void) {
     while (kbhit() == 0) {
         clrscr();
-        /* TEST 1: find prime numbers */
+        /* find prime numbers */
         find_prime(2, 100);
 
         clrscr();
-        /* TEST 2: color wash */
+        /* color wash */
         color_wash(10);
+
+        clrscr();
+        /* maze */
+        maze(10);
     }
 
     /* reset */
