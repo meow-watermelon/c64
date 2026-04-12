@@ -11,13 +11,14 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-echo "Uploading .prg files to $FTP_HOST:$REMOTE_PATH..."
+echo "Uploading .prg + .d64 files to $FTP_HOST:$REMOTE_PATH..."
 
 # Use lftp to perform a batch upload
 # -c runs the commands and exits
-lftp -c "open ftp://$FTP_HOST; 
-        cd $REMOTE_PATH; 
-        mput *.prg; 
+lftp -c "open ftp://$FTP_HOST;
+        cd $REMOTE_PATH;
+        mput *.prg;
+        mput snoopy/*.d64;
         bye"
 
 if [ $? -eq 0 ]; then
