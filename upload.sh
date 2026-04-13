@@ -19,6 +19,7 @@ lftp -c "open ftp://$FTP_HOST;
         cd $REMOTE_PATH;
         mput *.prg;
         mput snoopy/*.d64;
+        mput pangya/*.d64;
         bye"
 
 if [ $? -eq 0 ]; then
