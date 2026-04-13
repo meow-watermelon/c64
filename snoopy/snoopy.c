@@ -41,7 +41,7 @@ static void show_picture(unsigned char *filename) {
     }
 }
 
-void main(void) {
+int main(void) {
     unsigned char fname[10];
     unsigned int i = 1;
 
@@ -66,4 +66,6 @@ void main(void) {
     /* reset */
     VIC.ctrl1 &= ~0x20;
     CIA2.pra = (CIA2.pra & 0xFC) | 0x03;
+
+    return 0;
 }
