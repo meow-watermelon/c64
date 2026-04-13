@@ -18,6 +18,8 @@ static void sleep_second(unsigned short int second) {
 }
 
 static void show_picture(unsigned char *filename) {
+    memset(DISK_DATA, 0, KOALA_FILE_SIZE);
+
     if (cbm_open(1, 8, CBM_READ, filename) == 0) {
         cbm_read(1, DISK_DATA, KOALA_FILE_SIZE);
         cbm_close(1);
