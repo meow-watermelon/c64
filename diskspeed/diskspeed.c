@@ -16,7 +16,7 @@ static void clear_screen(void) {
     __asm__("jsr $E544");
 }
 
-static void disk_benchmark(unsigned char device_name, unsigned char mode) {
+static void disk_benchmark(unsigned char device_name, unsigned char mode, unsigned char count) {
     unsigned char ret_open;
     int ret_read;
     clock_t start;
@@ -31,9 +31,6 @@ static void disk_benchmark(unsigned char device_name, unsigned char mode) {
             printf("ERROR: failed to open device %d: %d\n", device_name, ret_open);
             return;
         }
-
-        /* print memory address that is used for buffer */
-        printf("ADDRESS: %p\n", disk_buffer);
 
         /* start timer */
         start = clock();
@@ -52,7 +49,7 @@ static void disk_benchmark(unsigned char device_name, unsigned char mode) {
         }
 
         /* print period time */
-        printf("DEV %d READ SPEED: %u B/S\n", device_name, (unsigned int)(TESTDATA_SIZE / ((clock() - start) / CLOCKS_PER_SEC)));
+        printf("[%d] DEV %d READ SPEED: %u B/S\n", count, device_name, (unsigned int)(TESTDATA_SIZE / ((clock() - start) / CLOCKS_PER_SEC)));
 
         /* close file */
         cbm_close(1);
@@ -66,10 +63,12 @@ int main(void) {
     /* clear screen */
     clear_screen();
 
+    /* print memory address that is used for buffer */
+    printf("BUFFER MEMORY ADDRESS: %p\n", disk_buffer);
+
     /* start benchmark procedure */
     for (i = 1; i <= round; ++i) {
-        printf("ROUND [%d]\n", i);
-        disk_benchmark(DEVICE_NAME, CBM_READ);
+        disk_benchmark(DEVICE_NAME, CBM_READ, i);
     }
 
     return 0;
