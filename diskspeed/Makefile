@@ -10,11 +10,9 @@ TESTDATA = testdata
 
 all: $(DISK)
 
-# Compile the C code
 $(PROGRAM): $(SOURCE)
 	$(CC) -O -t $(TARGET) $(SOURCE) -o $(PROGRAM)
 
-# Build the D64 image
 $(DISK): $(PROGRAM) $(TESTDATA)
 	rm -f $(DISK)
 	$(ASSET_TOOL) -format "diskspeed,01" d64 $(DISK)
