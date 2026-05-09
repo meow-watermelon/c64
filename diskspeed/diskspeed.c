@@ -19,7 +19,7 @@ static void clear_screen(void) {
 static void disk_benchmark(unsigned char device_name, unsigned char mode, unsigned char count) {
     unsigned char ret_open;
     int ret_read, ret_write;
-    clock_t start;
+    struct timespec start, end;
 
     /* clear memory */
     memset(disk_buffer, 0, TESTDATA_SIZE);
@@ -32,7 +32,7 @@ static void disk_benchmark(unsigned char device_name, unsigned char mode, unsign
         }
 
         /* start timer */
-        start = clock();
+        clock_gettime(CLOCK_REALTIME, &start);
 
         /* read data */
         ret_read = cbm_read(1, disk_buffer, TESTDATA_SIZE);
@@ -47,22 +47,30 @@ static void disk_benchmark(unsigned char device_name, unsigned char mode, unsign
             return;
         }
 
-        /* print period time */
-        printf("[%d] DEV %d READ SPEED: %u B/S\n", count, device_name, (unsigned int)(TESTDATA_SIZE / ((clock() - start) / CLOCKS_PER_SEC)));
+        /* stop timer */
+        clock_gettime(CLOCK_REALTIME, &end);
 
         /* close file */
         cbm_close(1);
+
+        /* print period time */
+        printf("[%d] DEV %d READ SPEED: %lu B/S\n", count, device_name, (unsigned long int)(TESTDATA_SIZE / (end.tv_sec - start.tv_sec)));
     }
 
     if (mode == CBM_WRITE) {
-        ret_open = cbm_open(1, device_name, CBM_WRITE, "@0:writetest");
+        /* delete writetest file first, ignore error on deleting file */
+        cbm_open(15, device_name, 15, "s0:writetest");
+        cbm_close(15);
+
+        /* open new file for benchmark */
+        ret_open = cbm_open(1, device_name, CBM_WRITE, "writetest");
         if (ret_open != 0) {
             printf("ERROR: failed to open device %d: %d\n", device_name, ret_open);
             return;
         }
 
         /* start timer */
-        start = clock();
+        clock_gettime(CLOCK_REALTIME, &start);
 
         /* write data */
         ret_write = cbm_write(1, disk_buffer, TESTDATA_SIZE);
@@ -77,11 +85,14 @@ static void disk_benchmark(unsigned char device_name, unsigned char mode, unsign
             return;
         }
 
-        /* print period time */
-        printf("[%d] DEV %d WRITE SPEED: %u B/S\n", count, device_name, (unsigned int)(TESTDATA_SIZE / ((clock() - start) / CLOCKS_PER_SEC)));
+        /* stop timer */
+        clock_gettime(CLOCK_REALTIME, &end);
 
         /* close file */
         cbm_close(1);
+
+        /* print period time */
+        printf("[%d] DEV %d WRITE SPEED: %lu B/S\n", count, device_name, (unsigned long int)(TESTDATA_SIZE / (end.tv_sec - start.tv_sec)));
     }
 }
 
